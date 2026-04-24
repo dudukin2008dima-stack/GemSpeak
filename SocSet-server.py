@@ -1106,9 +1106,22 @@ class DiscordServer:
             self.voice_rooms.clear()
 
 if __name__ == '__main__':
+    import signal
+    import threading
+
     server = DiscordServer()
+    stop_event = threading.Event()
+
+    def signal_handler(sig, frame):
+        print("\n[INFO] Получен сигнал остановки, завершаем работу...")
+        stop_event.set()
+
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
     try:
         server.start()
-        input("Нажмите Enter для остановки сервера...\n")
+        print("[INFO] Сервер запущен, ожидание сигнала завершения...")
+        stop_event.wait()          # ждём сигнала (Ctrl+C или SIGTERM)
     finally:
         server.stop()
