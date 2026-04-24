@@ -1107,10 +1107,32 @@ class DiscordServer:
 # Затем в конце файла, в if __name__ == '__main__':
 if __name__ == '__main__':
     import os
-    # ПРИНУДИТЕЛЬНО берем порт из окружения
-    PORT = int(os.environ.get('PORT', 12345))
-    print(f"🔧 Запускаем на порту: {PORT}")
+    import signal
+    import threading
     
+    # Railway передает порт через переменную окружения PORT
+    PORT = int(os.environ.get('PORT', 12345))
+    HOST = '0.0.0.0'
+    
+    server = DiscordServer(host=HOST, port=PORT)
+    stop_event = threading.Event()
+    
+    def signal_handler(sig, frame):
+        print("\n[INFO] Получен сигнал остановки, завершаем работу...")
+        stop_event.set()
+    
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
+    try:
+        server.start()
+        print(f"[INFO] Сервер запущен на {HOST}:{PORT}")
+        print(f"[INFO] Ожидание сигнала завершения (Ctrl+C или SIGTERM)...")
+        stop_event.wait()
+    except Exception as e:
+        print(f"[ERROR] Ошибка при запуске сервера: {e}")
+    finally:
+        server.stop()
     server = DiscordServer(host='0.0.0.0', port=PORT)
     # ... остальной код
     
