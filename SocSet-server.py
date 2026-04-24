@@ -1110,9 +1110,9 @@ if __name__ == '__main__':
     import signal
     import threading
     
-    # ПРИНУДИТЕЛЬНО используем порт 8080 (Railway любит этот порт)
+
     # Или берем из переменной окружения
-    PORT = int(os.environ.get('PORT', 8080))  # Изменено с 12345 на 8080
+    PORT = int(os.environ.get('PORT', 12345))  # Изменено с 12345 
     HOST = '0.0.0.0'
     
     print(f"🔧 Запускаем на порту: {PORT}")
