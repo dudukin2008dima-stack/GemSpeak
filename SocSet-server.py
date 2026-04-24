@@ -8,9 +8,9 @@ import time
 import os
 
 class DiscordServer:
-    def __init__(self, host='0.0.0.0', port=12345):
+    def __init__(self, host='0.0.0.0', port=none):
         self.host = host
-        self.port = port
+        self.port = port or 12345
         self.server_socket = None
         self.data_file = "server_data.json"
 
@@ -1106,8 +1106,13 @@ class DiscordServer:
             self.voice_rooms.clear()
 # Затем в конце файла, в if __name__ == '__main__':
 if __name__ == '__main__':
-    PORT = int(os.environ.get('PORT', 12345))  # Railway передаст свой порт
-    HOST = '0.0.0.0'
+    import os
+    # ПРИНУДИТЕЛЬНО берем порт из окружения
+    PORT = int(os.environ.get('PORT', 12345))
+    print(f"🔧 Запускаем на порту: {PORT}")
+    
+    server = DiscordServer(host='0.0.0.0', port=PORT)
+    # ... остальной код
     
     server = DiscordServer(host=HOST, port=PORT)  # Используем порт от Railway
     # ... остальной код без изменений
