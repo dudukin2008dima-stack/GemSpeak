@@ -1104,24 +1104,10 @@ class DiscordServer:
                 sock.close()
             self.clients.clear()
             self.voice_rooms.clear()
-
+# Затем в конце файла, в if __name__ == '__main__':
 if __name__ == '__main__':
-    import signal
-    import threading
-
-    server = DiscordServer()
-    stop_event = threading.Event()
-
-    def signal_handler(sig, frame):
-        print("\n[INFO] Получен сигнал остановки, завершаем работу...")
-        stop_event.set()
-
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
-
-    try:
-        server.start()
-        print("[INFO] Сервер запущен, ожидание сигнала завершения...")
-        stop_event.wait()          # ждём сигнала (Ctrl+C или SIGTERM)
-    finally:
-        server.stop()
+    PORT = int(os.environ.get('PORT', 12345))  # Railway передаст свой порт
+    HOST = '0.0.0.0'
+    
+    server = DiscordServer(host=HOST, port=PORT)  # Используем порт от Railway
+    # ... остальной код без изменений
