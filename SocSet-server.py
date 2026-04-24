@@ -8,7 +8,9 @@ import time
 import os
 
 class DiscordServer:
-    def __init__(self, host='0.0.0.0', port=12345):
+    def __init__(self, host='0.0.0.0', port=None):
+      if port is None:
+          port = int(os.environ.get('PORT', 12345))
         self.host = host
         self.port = port
         self.server_socket = None
